@@ -1,0 +1,1 @@
+Copy "SQLiteDBScript.txt" to ".\Lessons Scheduler\bin\Debug"

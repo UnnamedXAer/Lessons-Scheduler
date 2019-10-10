@@ -1,0 +1,267 @@
+CREATE TABLE [Group] (
+    grId     INTEGER       PRIMARY KEY AUTOINCREMENT
+                           UNIQUE
+                           NOT NULL,
+    grName   VARCHAR (150) NOT NULL,
+    grYear   INT           NOT NULL,
+    grStudNo INT           NOT NULL
+);
+
+
+CREATE TABLE Person (
+    perId         INTEGER      PRIMARY KEY AUTOINCREMENT
+                               UNIQUE
+                               NOT NULL,
+    perFirstName  VARCHAR (50) NOT NULL,
+    perLastName   VARCHAR (50) NOT NULL,
+    perDegree     VARCHAR (50),
+    perIdentifier VARCHAR (10) 
+);
+
+
+CREATE TABLE Subject (
+    subId      INTEGER       PRIMARY KEY AUTOINCREMENT
+                             UNIQUE
+                             NOT NULL,
+    subName    VARCHAR (200) NOT NULL,
+    subType    INT           NOT NULL,
+    subHoursNo INT           NOT NULL
+);
+
+
+CREATE TABLE Room (
+    roomId     INTEGER      PRIMARY KEY AUTOINCREMENT
+                            UNIQUE
+                            NOT NULL,
+    roomNo     VARCHAR (5)  NOT NULL,
+    roomWing   VARCHAR (10) NOT NULL,
+    roomSitsNo INT          NOT NULL
+);
+
+
+CREATE TABLE DaysAndHours (
+    dahId   INTEGER PRIMARY KEY AUTOINCREMENT
+                    UNIQUE
+                    NOT NULL,
+    dahDay  INT     NOT NULL,
+    dahHour INT     NOT NULL
+);
+
+
+CREATE TABLE PersonUnavailability (
+    puId    INTEGER PRIMARY KEY AUTOINCREMENT
+                    NOT NULL
+                    UNIQUE,
+    puPerId INTEGER REFERENCES Person (perId) 
+                    NOT NULL,
+    puDahId INTEGER REFERENCES DaysAndHours (dahId) 
+                    NOT NULL
+);
+
+
+CREATE TABLE GroupsOfGroup (
+    gogId     INTEGER      PRIMARY KEY AUTOINCREMENT
+                           UNIQUE
+                           NOT NULL,
+    gogGrId   INTEGER      REFERENCES [Group] (grId) 
+                           NOT NULL,
+    gogType   INT          NOT NULL,
+    gogStudNo INT          NOT NULL,
+    gogName   VARCHAR (10) NOT NULL
+                           DEFAULT ('wyk') 
+);
+
+
+CREATE TABLE RoomUnavailability (
+    ruId     INTEGER PRIMARY KEY AUTOINCREMENT
+                     UNIQUE
+                     NOT NULL,
+    ruRoomId INTEGER REFERENCES Room (roomId) 
+                     NOT NULL,
+    ruDahId  INTEGER NOT NULL
+                     REFERENCES DaysAndHours (dahId) 
+);
+
+
+CREATE TABLE SubjectTeachers (
+    stId    INTEGER PRIMARY KEY AUTOINCREMENT
+                    UNIQUE
+                    NOT NULL,
+    stSubId INTEGER REFERENCES Subject (subId),
+    stPerId INTEGER REFERENCES Person (perId) 
+);
+
+
+CREATE TABLE DahForGroup (
+    dfgId      INTEGER PRIMARY KEY AUTOINCREMENT
+                       UNIQUE
+                       NOT NULL,
+    dfgDahId   INTEGER REFERENCES DaysAndHours (dahId) 
+                       NOT NULL,
+    dfgGrId    INTEGER REFERENCES [Group] (grId) 
+                       NOT NULL,
+    dfgSlotsNo INT     NOT NULL
+                       DEFAULT (1) 
+);
+
+CREATE TABLE [Plan] (
+    plId   INTEGER PRIMARY KEY AUTOINCREMENT
+                   UNIQUE
+                   NOT NULL,
+    plGrId INTEGER REFERENCES [Group] (grId) 
+                   UNIQUE
+                   NOT NULL
+);
+
+
+CREATE TABLE Lesson (
+    lesId     INTEGER PRIMARY KEY AUTOINCREMENT
+                      UNIQUE
+                      NOT NULL,
+    lesPerId  INTEGER REFERENCES Person (perId),
+    lesSubId  INTEGER REFERENCES Subject (subId),
+    lesDfgId  INTEGER REFERENCES DahForGroup (dfgId),
+    lesRoomId INTEGER REFERENCES Room (roomId),
+    lesGogId  INTEGER REFERENCES GroupsOfGroup (gogId),
+    lesPlId   INTEGER REFERENCES [Plan] (plId) 
+);
+
+
+CREATE TABLE SubsForGog (
+    sgId    INTEGER PRIMARY KEY
+                    NOT NULL
+                    UNIQUE,
+    sgGogId INTEGER REFERENCES GroupsOfGroup (gogId) 
+                    NOT NULL,
+    sgSubId INTEGER REFERENCES Subject (subId) 
+                    NOT NULL
+);
+
+CREATE TABLE SubsForGroup (
+    sfgId    INTEGER PRIMARY KEY AUTOINCREMENT
+                     UNIQUE
+                     NOT NULL,
+    sfgGrId  INTEGER REFERENCES [Group] (grId) 
+                     NOT NULL,
+    sfgSubId INTEGER REFERENCES Subject (subId) 
+                     NOT NULL
+);
+
+
+
+delete from Room;
+INSERT INTO Room (
+                     roomNo,
+                     roomWing,
+                     roomSitsNo
+                 )
+                 VALUES 
+                 ( 1, 'B1', 25 ),
+                 ( 2, 'B1',25 ),
+                 ( 3, 'B1',20 ),
+                 ( 5, 'B1',25 ),
+                 ( 7, 'B1',15 ),
+                 ( 8, 'B1',25 ),
+                 ( 9, 'B1',20 ),
+                 ( 10, 'B1',15 ),
+                 
+
+                 ( 101, 'B1', 25),
+                 ( 102, 'B1',25 ),
+                 ( 105, 'B1',25 ),
+                 ( 109, 'B1',25 ),
+                 ( 110, 'B1',20 ),
+                 ( 111, 'B1',20 ),
+                 ( 108, 'B1',200 ),
+                 ( 107, 'B1',200 ),
+                 ( 112, 'B1',30 ), 
+
+                ( 211, 'B1', 25 ),
+                 ( 212, 'B1',25 ),
+                 ( 213, 'B1',20 ),
+                ( 210, 'B1', 30 ),
+                 ( 214, 'B1',25 ),
+                 ( 217, 'B1',15 ),
+                 ( 218, 'B1',25 ),
+                 ( 220, 'B1',20 ),
+                 ( 221, 'B1',15 ),
+    /*       ---------------------------------------------*/
+           
+                 ( 21, 'B2', 25 ),
+                 ( 22, 'B2',25 ),
+                 ( 23, 'B2',20 ),
+                 ( 25, 'B2',25 ),
+                 ( 27, 'B2',15 ),
+                 ( 28, 'B2',25 ),
+                 ( 29, 'B2',20 ),
+                 ( 30, 'B2',15 ),
+                 
+                 ( 31, 'B2', 25 ),
+                 ( 32, 'B2',25 ),
+                 ( 33, 'B2',20 ),
+                 ( 35, 'B2',25 ),
+                 ( 37, 'B2',15 ),
+                 ( 38, 'B2',25 ),
+                 ( 39, 'B2',20 ),
+                 ( 40, 'B2',15 ),
+
+      
+                 ( 155, 'B2', 25),
+                 ( 167, 'B2',25 ),
+                 ( 168, 'B2',25 ),
+                 ( 171, 'B2',25 ),
+                 ( 170, 'B2',20 ),
+                 ( 169, 'B2',20 ),
+                 
+                ( 155, 'B2', 25),
+                 ( 156, 'B2',25 ),
+                 ( 157, 'B2',25 ),
+                 ( 158, 'B2',25 ),
+                 ( 159, 'B2',20 ),
+                 ( 160, 'B2',20 ),
+                 
+                ( 168, 'B2',200 ),
+                 ( 167, 'B2',200 ),
+                 ( 112, 'B2',30 ), 
+                 
+                ( 223, 'B2', 25 ),
+                 ( 224, 'B2',25 ),
+                 ( 225, 'B2' ,20 ),
+                ( 230, 'B2', 30 ),
+                 ( 231, 'B2',25 ),
+                 ( 237, 'B2',15 ),
+                 ( 238, 'B2',25 ),
+
+                ( 241, 'B2', 25 ),
+                 ( 242, 'B2',25 ),
+                 ( 243, 'B2' ,20 ),
+                ( 240, 'B2', 30 ),
+                 ( 241, 'B2',25 ),
+                 ( 247, 'B2',15 ),
+                 ( 248, 'B2',25 ),
+                 ( 244, 'B2',20 ),
+                 ( 245, 'B2',15 ),
+                 
+
+
+/************************/
+                ( 121, 'B3', 25),
+                 ( 122, 'B3',25 ),
+                 ( 123, 'B3',25 ),
+                 ( 129, 'B3',25 ),
+                 ( 124, 'B3',20 ),
+                 ( 125, 'B3',20 ),
+                 ( 128, 'B3',30 ),
+                 ( 127, 'B3',35 ),
+                 ( 132, 'B3',30 ), 
+
+                ( 251, 'B3', 25 ),
+                 ( 252, 'B3',25 ),
+                 ( 253, 'B3',20 ),
+                ( 254, 'B3', 30 ),
+                 ( 255, 'B3',25 ),
+                 ( 257, 'B3',15 ),
+                 ( 258, 'B3',25 ),
+                 ( 259, 'B3',20 ),
+                 ( 250, 'B3',15 )
+                 ;

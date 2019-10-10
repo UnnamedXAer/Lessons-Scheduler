@@ -1,0 +1,240 @@
+﻿--
+-- File generated with SQLiteStudio v3.1.1 on Sat May 5 15:09:47 2018
+--
+-- Text encoding used: System
+--
+PRAGMA foreign_keys = off;
+BEGIN TRANSACTION;
+
+-- Table: DahForGroup
+DROP TABLE IF EXISTS DahForGroup;
+CREATE TABLE DahForGroup (
+    dfgId      INTEGER PRIMARY KEY AUTOINCREMENT
+                       UNIQUE
+                       NOT NULL,
+    dfgDahId   INTEGER REFERENCES DaysAndHours (dahId) 
+                       NOT NULL,
+    dfgGrId    INTEGER REFERENCES [Group] (grId) 
+                       NOT NULL,
+    dfgSlotsNo INT     NOT NULL
+                       DEFAULT (1) 
+);
+
+-- Table: DaysAndHours
+DROP TABLE IF EXISTS DaysAndHours;
+CREATE TABLE DaysAndHours (
+    dahId   INTEGER PRIMARY KEY AUTOINCREMENT
+                    UNIQUE
+                    NOT NULL,
+    dahDay  INT     NOT NULL,
+    dahHour INT     NOT NULL
+);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (1, 1, 1);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (2, 1, 2);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (3, 1, 3);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (4, 1, 4);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (5, 1, 5);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (6, 1, 6);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (7, 2, 1);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (8, 2, 2);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (9, 2, 3);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (10, 2, 4);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (11, 2, 5);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (12, 2, 6);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (13, 3, 1);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (14, 3, 2);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (15, 3, 3);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (16, 3, 4);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (17, 3, 5);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (18, 3, 6);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (19, 4, 1);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (20, 4, 2);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (21, 4, 3);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (22, 4, 4);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (23, 4, 5);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (24, 4, 6);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (31, 0, 0);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (32, 1, 0);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (33, 2, 0);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (34, 3, 0);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (35, 4, 0);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (36, 0, 7);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (37, 1, 7);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (38, 2, 7);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (39, 3, 7);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (40, 4, 7);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (41, 0, 1);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (42, 0, 2);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (43, 0, 3);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (44, 0, 4);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (45, 0, 5);
+INSERT INTO DaysAndHours (dahId, dahDay, dahHour) VALUES (46, 0, 6);
+
+-- Table: Group
+DROP TABLE IF EXISTS [Group];
+CREATE TABLE [Group] (
+    grId     INTEGER       PRIMARY KEY AUTOINCREMENT
+                           UNIQUE
+                           NOT NULL,
+    grName   VARCHAR (150) NOT NULL,
+    grYear   INT           NOT NULL,
+    grStudNo INT           NOT NULL
+);
+INSERT INTO [Group] (grId, grName, grYear, grStudNo) VALUES (1, 'Mechatronika mgr', 2, 66);
+INSERT INTO [Group] (grId, grName, grYear, grStudNo) VALUES (2, 'Mechatronika mgr', 1, 50);
+
+-- Table: GroupsOfGroup
+DROP TABLE IF EXISTS GroupsOfGroup;
+CREATE TABLE GroupsOfGroup (gogId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, gogGrId INTEGER REFERENCES [Group] (grId) NOT NULL, gogType INT NOT NULL, gogStudNo INT NOT NULL, gogName VARCHAR (10) NOT NULL DEFAULT ('wyk'), gogGroupNo INTEGER NOT NULL);
+
+
+-- Table: Hours
+DROP TABLE IF EXISTS Hours;
+CREATE TABLE Hours (hId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hGogId INTEGER REFERENCES GroupsOfGroup (gogId) NOT NULL, hDayNo INTEGER, hHourNo INTEGER, hSlotsMax INTEGER NOT NULL DEFAULT (1), SlotNo INTEGER);
+
+-- Table: Lesson
+DROP TABLE IF EXISTS Lesson;
+CREATE TABLE Lesson (lesId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, lesPerId INTEGER CONSTRAINT per REFERENCES Person (perId) NOT NULL, lesSubId INTEGER CONSTRAINT sub REFERENCES Subject (subId) NOT NULL, lesRoomId INTEGER CONSTRAINT room REFERENCES Room (roomId), lesGogId INTEGER CONSTRAINT gog REFERENCES GroupsOfGroup (gogId) NOT NULL, lesDayNo INTEGER NOT NULL, lesHourNo INTEGER NOT NULL, lesSlotNo INTEGER NOT NULL, lesDahId INTEGER CONSTRAINT dah REFERENCES DaysAndHours (dahId) NOT NULL);
+
+
+-- Table: Person
+DROP TABLE IF EXISTS Person;
+CREATE TABLE Person (perId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, perFirstName VARCHAR (50) NOT NULL, perLastName VARCHAR (50) NOT NULL, perDegree VARCHAR (50), perIdentifier VARCHAR (10));
+
+
+-- Table: PersonUnavailability
+DROP TABLE IF EXISTS PersonUnavailability;
+CREATE TABLE PersonUnavailability (puId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, puPerId INTEGER REFERENCES Person (perId) NOT NULL, puDayNo INTEGER NOT NULL, puHourNo INTEGER NOT NULL, puDahId INTEGER REFERENCES DaysAndHours (dahId) NOT NULL, puIsLesson INTEGER (1) NOT NULL DEFAULT (0));
+
+
+-- Table: Room
+DROP TABLE IF EXISTS Room;
+CREATE TABLE Room (roomId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, roomNo VARCHAR (5) NOT NULL, roomWing VARCHAR (10) NOT NULL, roomSitsNo INTEGER NOT NULL);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (20, '1', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (21, '2', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (22, '3', 'B1', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (23, '5', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (24, '7', 'B1', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (25, '8', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (26, '9', 'B1', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (27, '10', 'B1', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (28, '101', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (29, '102', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (30, '105', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (31, '109', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (32, '110', 'B1', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (33, '111', 'B1', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (34, '108', 'B1', 200);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (35, '107', 'B1', 200);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (36, '112', 'B1', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (37, '211', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (38, '212', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (39, '213', 'B1', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (40, '210', 'B1', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (41, '214', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (42, '217', 'B1', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (43, '218', 'B1', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (44, '220', 'B1', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (45, '221', 'B1', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (46, '21', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (47, '22', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (48, '23', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (49, '25', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (50, '27', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (51, '28', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (52, '29', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (53, '30', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (54, '31', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (55, '32', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (56, '33', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (57, '35', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (58, '37', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (59, '38', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (60, '39', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (61, '40', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (62, '155', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (63, '167', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (64, '168', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (65, '171', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (66, '170', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (67, '169', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (68, '155', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (69, '156', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (70, '157', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (71, '158', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (72, '159', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (73, '160', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (74, '168', 'B2', 200);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (75, '167', 'B2', 200);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (76, '112', 'B2', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (77, '223', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (78, '224', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (79, '225', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (80, '230', 'B2', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (81, '231', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (82, '237', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (83, '238', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (84, '241', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (85, '242', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (86, '243', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (87, '240', 'B2', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (88, '241', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (89, '247', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (90, '248', 'B2', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (91, '244', 'B2', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (92, '245', 'B2', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (93, '121', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (94, '122', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (95, '123', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (96, '129', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (97, '124', 'B3', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (98, '125', 'B3', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (99, '128', 'B3', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (100, '127', 'B3', 35);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (101, '132', 'B3', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (102, '251', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (103, '252', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (104, '253', 'B3', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (105, '254', 'B3', 30);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (106, '255', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (107, '257', 'B3', 15);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (108, '258', 'B3', 25);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (109, '259', 'B3', 20);
+INSERT INTO Room (roomId, roomNo, roomWing, roomSitsNo) VALUES (110, '250', 'B3', 15);
+
+-- Table: RoomUnavailability
+DROP TABLE IF EXISTS RoomUnavailability;
+CREATE TABLE RoomUnavailability (ruId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, ruRoomId INTEGER REFERENCES Room (roomId) NOT NULL, ruDayNo INTEGER NOT NULL, ruHourNo NOT NULL, ruDahId REFERENCES DaysAndHours (dahId) NOT NULL);
+
+
+-- Table: Subject
+DROP TABLE IF EXISTS Subject;
+CREATE TABLE Subject (subId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, subName VARCHAR (200) NOT NULL, subHoursNo INT DEFAULT (30), subType INT CHECK (subType = 1 OR subType = 2 OR subType = 3 OR subType = 4) DEFAULT (1) NOT NULL, subColor STRING (20) DEFAULT white);
+INSERT INTO Subject (subId, subName, subHoursNo, subType, subColor) VALUES (22, 'Ochrona własności intelektualnej i przemysłowej', 15, 1, '#d788f7');
+INSERT INTO Subject (subId, subName, subHoursNo, subType, subColor) VALUES (23, 'Cyfrowe przetwarzanie sygnałów', 15, 1, '#ef779d');
+
+-- Table: SubjectTeachers
+DROP TABLE IF EXISTS SubjectTeachers;
+CREATE TABLE SubjectTeachers (
+    stId    INTEGER PRIMARY KEY AUTOINCREMENT
+                    UNIQUE
+                    NOT NULL,
+    stSubId INTEGER REFERENCES Subject (subId),
+    stPerId INTEGER REFERENCES Person (perId) 
+);
+
+
+-- Table: SubsForGroup
+DROP TABLE IF EXISTS SubsForGroup;
+CREATE TABLE SubsForGroup (sfgId INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, sfgGrId INTEGER REFERENCES [Group] (grId) NOT NULL, sfgSubId INTEGER REFERENCES Subject (subId) NOT NULL);
+
+
+-- Table: TXT
+DROP TABLE IF EXISTS TXT;
+CREATE TABLE TXT (TXT STRING, num INTEGER);
+INSERT INTO TXT (TXT, num) VALUES ('TXT', NULL);
+INSERT INTO TXT (TXT, num) VALUES ('TXT1', NULL);
+INSERT INTO TXT (TXT, num) VALUES ('TXT2', NULL);
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;
